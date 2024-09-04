@@ -1,4 +1,4 @@
-# phase-3
+# MoodWave: Voice-Driven Emotion Detection
 
 ## Requirements
 Your dataset must be:
@@ -22,7 +22,7 @@ Datasets include audio recordings of speech with labeled emotions (e.g., happy, 
 
 [Speech Emotion Recognition (en)](https://www.kaggle.com/datasets/dmitrybabko/speech-emotion-recognition-en)
 
-## Phase 3 
+## Phase 3 Concepts used:
 
 - Logistic Regression:
 
