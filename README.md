@@ -96,3 +96,10 @@ This final model is a reliable tool for automating apple quality assessment. Inc
 - Keep human inspection in the QA process. While this model is highly accurate, it may still miss subtle or edge cases. 
 - Periodically retrain the model to adapt to changing factors (seasonal factors, new apple varieties)
 - Implement monitoring to track performance in real-world scenarios to ensure consistency. 
+
+---
+
+## Repository
+
+- [Jupyter Notebook](notebook.ipynb)
+- Presentation slides
