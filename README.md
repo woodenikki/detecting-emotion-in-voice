@@ -1,105 +1,162 @@
 ## Business Understanding
 
-- **Stakeholders**: apple growers, distributors, and retailers
-- **Problem**: 
-> By predicting apple quality, this project helps the entire apple industry. Growers can prioritize harvesting the best apples, reducing waste. Distributors can send high-quality apples to premium markets, ensuring customer satisfaction. Retailers can optimize inventory, reducing spoilage and improving profitability. Overall, this project helps reduce waste and improve customer satisfaction for all stakeholders.
+When working as a customer service agent, you are bound to run into the whole spectrum of emotions - annoyance, gratefulness, anger, or complete neutrality. These agents are often monitored, scored on how well - and how many issues they address. 
+
+A satisfied customer - either leaving a positive review, or having the call recorded and review - will leave a good impression on the agent. 
+A frustrated customer is more likely to leave a negative review, or a manager reviews a call that went poorly - it reflects negatively on the agent. 
+
+Implementing AI into the customer support pipeline can be beneficial in many ways:
+
+- If an agent knows as soon as their customer is upset, they can adjust how they speak to them, or you can even adapt the script the agent uses as the customer’s emotions fluctuate. 
+- The agent feels more secure in their responses, or know that they can escalate to someone better equipped to handle difficult customers. 
+- The customer feels heard, finds a resolution faster, and has an overall better experience!
+
+#### Objective: Create a model to identify customer emotion (Upset/Not Upset) over the phone.
 
 ---
 
-## Data Understanding:
-This dataset contains information about various attributes of a set of fruits, providing insights into their characteristics. The dataset includes details such as fruit ID, size, weight, sweetness, crunchiness, juiciness, ripeness, acidity, and quality.
+## Data Understanding
 
-The dataset was generously provided by an American agriculture company. The data has been scaled and cleaned for ease of use.
+In this project, we are dealing with four datasets containing English audio recordings in the .wav format. Each audio recording is labeled with an emotion that the speaker is evoking in their statement. Our goal is to build a model that can successfully map an emotion to a given voice clip of someone speaking.
 
-[Apple Quality: Kaggle](https://www.kaggle.com/datasets/nelgiriyewithana/apple-quality)
+> Compiled datsets can be found on [Kaggle: Speech / Emotion Recognition](https://www.kaggle.com/datasets/dmitrybabko/speech-emotion-recognition-en).
+
+To achieve this, we will extract various features from the audio recordings that are relevant for analyzing speech and emotion. Here are the features we will be working with and their significance for working with audio:
+
+1. **Mel-frequency Cepstral Coefficients (MFCCs):** MFCCs are a compact representation of the short-term power spectrum of a sound. They are widely used in speech recognition and audio analysis tasks because they capture the essential characteristics of the audio signal while being robust to noise and other variabilities. MFCCs are particularly useful for identifying the phonetic content of speech, which can be helpful in determining the emotional state of the speaker.
+
+2. **Spectral Centroid:** The spectral centroid is a measure of the brightness or sharpness of a sound. It represents the weighted mean frequency of the spectrum and can be used to distinguish between different types of sounds or emotions. For example, a bright, harsh sound might have a higher spectral centroid than a mellow, soft sound.
+
+3. **Chroma Features:** Chroma features describe the distribution of energy across different pitch classes (notes) in the audio signal. They are useful for capturing tonal information, which can be relevant for identifying emotions in speech, particularly those related to intonation patterns and stress.
+
+4. **Zero-Crossing Rate:** The zero-crossing rate is a measure of the number of times the audio signal crosses the zero amplitude axis within a given time frame. It can be used to distinguish between different types of sounds, such as voiced and unvoiced speech, and can provide insights into the energy distribution of the audio signal.
+RMS Energy: The Root Mean Square (RMS) energy is a measure of the overall energy or loudness of an audio signal. It can be useful for detecting variations in volume or intensity, which can be indicative of certain emotions, such as anger or excitement.
+
+> By extracting and analyzing these features, we can capture various acoustic characteristics of the speech signal that may be relevant for distinguishing between different emotions. This multi-faceted approach can provide a more comprehensive representation of the audio data, potentially leading to better performance in the emotion classification task.
+
+---
 
 #### Features:
 
-| Feature     | Description                                                |
-|-------------|-----------------------------------------------------------|
-| A_id        | Unique identifier for each fruit                         |
-| Size        | Size of the fruit                                        |
-| Weight      | Weight of the fruit                                      |
-| Sweetness   | Degree of sweetness of the fruit                         |
-| Crunchiness | Texture indicating the crunchiness of the fruit          |
-| Juiciness   | Level of juiciness of the fruit                          |
-| Ripeness    | Stage of ripeness of the fruit                           |
-| Acidity     | Acidity level of the fruit                               |
-| Quality     | Overall quality of the fruit (target variable)           |
+| **Feature**            | **Description**                                                                                      |
+|------------------------|-----------------------------------------------------------|
+| **id**                 | Unique identifier for each audio sample.                                                             |
+| **filename**           | Name of the audio file.                                                                              |
+| **emotion**            | The labeled emotion expressed in the audio (e.g., angry, happy).                                     |
+| **path**               | File path to the location of the audio file.                                                         |
+| **mfccs**              | A list of 13 Mel-frequency Cepstral Coefficients (MFCCs), representing the audio's short-term power spectrum. Useful for identifying speech characteristics. |
+| **chroma**             | A 12-dimensional representation of the energy distribution across different pitch classes (notes), capturing tonal information. |
+| **spectral_centroid**  | Represents the "center of mass" of the audio spectrum, indicating the brightness or sharpness of the sound. |
+| **zero_crossing_rate** | A measure of how often the audio signal crosses the zero amplitude axis, indicating the noisiness or texture of the sound. |
 
 ### Data Limitations
-- **Limited sample size** - The dataset only contains 4,000 samples, which may not capture the full range of variability in apple quality across different varieties, growing conditions, and regions. 
-- **Lack of contextual information** - The dataset gives us features like size, weight, sweetness, crunchiness, juiciness, ripeness, and acidity, but we were not given any context about the varieties of apples, or how these features were extracted. This is important context.
-- **Binary quality labels** - We have binary labels for the 'Quality' table: 'good' and 'bad'. This simplification is helpful for creating a model, but applie quality is likely more nuanced, and would benefit from a more granular labeling system.
-- **Normalized features** - this dataset's features have already been normalized, which is helpful for creating a model, but might make it harder to relate the model's predictions to real-world measurements. 
+- **Imbalanced Distribution** - The uneven distribution of positive vs. negative emotions could cause the model to favor the majority class, making it less effective at detecting emotions in underrepresented categories (e.g., fewer positive or neutral emotions).
+- **Limited Dataset Size** - A small dataset restricts the model’s ability to generalize to new, unseen data, potentially leading to overfitting and poor performance on real-world data. This is especially critical if the dataset doesn't cover a wide range of speakers or emotional expressions.
+- **Speaker Variability** - Emotional expression can vary greatly between different individuals, and if the dataset doesn't capture enough speaker diversity (e.g., accents, vocal tones), the model may struggle to accurately detect emotions across a broader population.
+- **Emotion Subjectivity** - Emotions are inherently subjective, and the labeled emotions in the dataset may not always perfectly match how different people perceive or express emotions. This could introduce noise into the labels, affecting the model’s ability to learn accurately.
 
 ---
 
 ## Data Preperation
-It looks like the features in our database have been standardized and normalized -- (likely because it's difficult to create a scale for subjective 'scores' such as sweetness and juiciness) this is very helpful.
 
-Let's continue with the rest of our data preparation steps:
+First, we will combine our 4 datasets in English: Crema, Ravdess, Savee and Tess. Each of them contains audio in .wav format with some main labels. (Note - not all datasets represent the same emotions, we will clean up the data labels to be as generic / inclusive as possible.
 
-- Handling Missing Values
-- Encoding Categorical Variables
-- Feature Scaling
-- Feature Selection / Engineering
+We will pull each dataset into their own dataframe, making note of *where* the file is, so we can later pull our features from each audio file. 
+
+Then, we will merge them all into one dataframe and extract our audio features as mentioned earlier:
+
+- Mel-frequency cepstral coefficients (MFCCs)
+- Spectral centroid
+- Chroma features
+- Zero-crossing rate
 
 ---
 
 ## Modeling
 
-We created multiple models, increasing in complexity. The final model (with best performance metrics) was built using LightGBM, a powerful and efficient gradient boosting framework for Python, to implement our ensemble model.
-> [LightGBM Docs](https://lightgbm.readthedocs.io/en/stable/)
+Multiple models were created and built upon iteratively. A few models attempted to use augmented audio to even out the distribution (synthetic data). In the end, we were able to create a multiclass classification model with 60% overall accuracy, and a binary classification model with 80% accuracy. Below are their classification reports:
 
-### Gradient Boosting Model
+### Multiclass Classification:
+> 6 classes: angry, happy, sad, neutral, disgust, fear
 
-LightGBM Accuracy: 0.9
+Classification Report:
 
-LightGBM Classification Report:
+| Class      | Precision | Recall | F1-Score | Support |
+|------------|-----------|--------|----------|---------|
+| **angry**      | 0.69      | 0.72   | 0.71     | 362     |
+| **disgust**    | 0.61      | 0.48   | 0.54     | 385     |
+| **fear**       | 0.68      | 0.41   | 0.51     | 381     |
+| **happy**      | 0.55      | 0.67   | 0.61     | 448     |
+| **neutral**    | 0.58      | 0.62   | 0.60     | 340     |
+| **sad**        | 0.57      | 0.71   | 0.63     | 408     |
+| **surprise**   | 0.61      | 0.46   | 0.52     | 37      |
+| **Accuracy**   |           |        | 0.60     | 2361    |
+| **Macro Avg**  | 0.61      | 0.58   | 0.59     | 2361    |
+| **Weighted Avg** | 0.61    | 0.60   | 0.60     | 2361    |
 
-|              | precision | recall | f1-score | support |
-|--------------|-----------|--------|----------|---------|
-| 0            | 0.90      | 0.90   | 0.90     | 401     |
-| 1            | 0.90      | 0.90   | 0.90     | 399     |
-| accuracy     |           |        | 0.90     | 800     |
-| macro avg    | 0.90      | 0.90   | 0.90     | 800     |
-| weighted avg | 0.90      | 0.90   | 0.90     | 800     |
+This model was successfully able to differentiate these emotions with 60% accuracy (much better than random guessing - which would be ~17%). 
 
+Though, this score isn't incredibly impressive, and the difference between a customer being angry or disgusted wouldn't make a huge difference to the CS agent. Instead, we will create a binary-classification problem.
 
-#### Comparison
-Decision Tree Classifier Accuracy: 0.81
-LightGBM Accuracy: 0.9
+### Binary Classification:
 
-The LightGBM model has achieved an accuracy of 0.90, which meets our desired accuracy score of at least 90%. The precision, recall, and f1-score for both classes (0 and 1) are also 0.90, indicating strong performance on all metrics. 
+> 0: **UPSET** and 1: **NOT UPSET**
+
+With the f1-score of 86% for detecting negative emotions, and 68% for detecting positive / neutral emotions: our model is definitely capable of flagging customers when they are upset or not on the phone! This discrepency is likely due to the imbalance of positive/negative values in our dataset. I chose not to augment positive samples for this model, as it seemed to add noise and confusion.
+
+| Class      | Precision | Recall | F1-Score | Support |
+|------------|-----------|--------|----------|---------|
+| **Negative** | 0.80      | 0.94   | 0.86     | 1585    |
+| **Positive** | 0.81      | 0.51   | 0.63     | 776     |
+| **Accuracy** |           |        | 0.80     | 2361    |
+| **Macro Avg** | 0.80      | 0.73   | 0.75     | 2361    |
+| **Weighted Avg** | 0.80      | 0.80   | 0.79     | 2361    |
 
 ---
 
 ## Evaluation of Final Model
 
-#### Final Model: Gradient Boosting
-The LightGBM Model stands out as the best performer on all metrics. 
+#### Binary Classification
+
+
+---
+## Evaluation of Final Model: Binary Classification
 
 #### Justification
-For this classification problem, precision, recall, and f1-score are crucial metrics (because both false-positives and false-negatives would have significant real-world consequences)
-- **precision** tells us how many apples predicted to be of good quality and actually were: **90%**
-- **recall** tells us how many of the truly good apples were correctly identified: **90%**
-- **f1-score** represents the balance between precision and recall: **90%**
 
-This final model is a reliable tool for automating apple quality assessment. Including:
-- **Operational Efficiency**: this model can save time and resources, reducing the need for manual inspection. 
-- **Minimize Waste**: Accurate classification reduces the risk of good apples being thrown out, or bad ones mistakenly being included in shipments.
-- **Customer Satisfaction**: ensuring that only high-quality apples reach the market will encrease brand repuation and customer loyalty. 
+For this emotion detection model, **precision**, **recall**, and **f1-score** are crucial metrics, as both false-positives (incorrectly flagging calm customers) and false-negatives (missing upset customers) can impact customer satisfaction.
+
+- **Precision**:
+  - **Negative (calm)**: 80% of predicted calm customers were actually calm.
+  - **Positive (upset)**: 81% of predicted upset customers were actually upset.
+  
+- **Recall**:
+  - **Negative (calm)**: 94% of calm customers were correctly identified.
+  - **Positive (upset)**: 51% of upset customers were correctly identified.
+  
+- **F1-Score**:
+  - **Negative (calm)**: 86%
+  - **Positive (upset)**: 63%
+
+This model is effective for:
+- **Operational Efficiency**: The model can alert agents when a customer is upset, allowing them to adjust their approach in real-time, improving customer experience.
+- **Escalation Control**: By tracking how long a customer remains upset, the model can help escalate calls to specialized teams, ensuring that frustrated customers receive the attention they need before issues escalate further.
+- **Agent Training and Feedback**: The model provides valuable performance metrics, which can be used to give specific feedback to agents on how they handle both positive and negative calls, improving overall service quality.
 
 #### Recommendations:
-- Include the LightGBM Model in quality assurance (QA) process to improve efficiency
-- Keep human inspection in the QA process. While this model is highly accurate, it may still miss subtle or edge cases. 
-- Periodically retrain the model to adapt to changing factors (seasonal factors, new apple varieties)
-- Implement monitoring to track performance in real-world scenarios to ensure consistency. 
+
+- **Alert the agent**: Implement real-time emotion detection to notify agents when a customer is upset, allowing them to adjust their approach and improve the interaction.
+  
+- **Track escalation**: Monitor how long a customer remains upset and, if necessary, escalate the call to a higher level of support. Consider creating a specialized team trained to handle prolonged negative customer interactions.
+
+- **Provide performance feedback**: Use this model to track both customer emotions and agent performance. Leverage these insights to provide specific feedback to agents, helping them improve their handling of positive versus negative calls.
+
+- **Enhance agent training**: Incorporate this tool into your training process for new employees, offering direct guidance on managing different emotional states during calls.
 
 ---
 
 ## Repository
 
+- [dataset](dataset/) : extracted from [Kaggle: Speech / Emotion Recognition](https://www.kaggle.com/datasets/dmitrybabko/speech-emotion-recognition-en)
 - [Jupyter Notebook](notebook.ipynb)
-- Presentation slides
+- Presentation [slides](slides.pdf)
