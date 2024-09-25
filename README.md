@@ -157,6 +157,10 @@ This model is effective for:
 
 ## Repository
 
-- [dataset](dataset/) : extracted from [Kaggle: Speech / Emotion Recognition](https://www.kaggle.com/datasets/dmitrybabko/speech-emotion-recognition-en)
+#### To replicate:
+- download the datset from [Kaggle: Speech / Emotion Recognition](https://www.kaggle.com/datasets/dmitrybabko/speech-emotion-recognition-en) - save as 'dataset.zip' - the notebook will handle extraction!
+
+> GitHub file size limits prevent me from uploading the dataset directly.
+
 - [Jupyter Notebook](notebook.ipynb)
 - Presentation [slides](slides.pdf)
